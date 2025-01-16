@@ -1,4 +1,4 @@
-# nixos-freifunk
+# nix-freifunk
 
 This Repository contains NixOS modules to configure Freifunk Infrastructure not just for a single Community.
 
@@ -45,7 +45,7 @@ And then import it to make the options available:
 
 ```nix
 imports = [
-  (import (import ./npins).nixos-freifunk)
+  (import (import ./npins).nix-freifunk)
 ];
 ```
 
@@ -56,14 +56,14 @@ Just add this repo via niv within your config repo
 
 
 ```bash
-niv add nix-freifunk/nixos-freifunk
+niv add nix-freifunk/nix-freifunk
 ```
 
 And then import it to make the options available:
 
 ```nix
 imports = [
-  (import (import ../../nix/sources.nix).nixos-freifunk)
+  (import (import ../../nix/sources.nix).nix-freifunk)
 ];
 ```
 
