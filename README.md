@@ -33,6 +33,23 @@ After all that is working you might want to carefully start looking at the [gate
 
 ## Installation
 
+### with npins
+
+Just add this repo via npins within your config repo
+
+```bash
+npins add github nix-freifunk nix-freifunk -b main
+```
+
+And then import it to make the options available:
+
+```nix
+imports = [
+  (import (import ./npins).nixos-freifunk)
+];
+```
+
+
 ### with niv
 
 Just add this repo via niv within your config repo
