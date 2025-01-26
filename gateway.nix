@@ -610,18 +610,6 @@ in
     (name: domain: domain.fastd.port)
     (lib.filterAttrs (_: domain: domain.fastd.enable) enabledDomains);
 
-    nixpkgs.overlays = [(self: super: {
-      fastd = super.fastd.overrideAttrs (oldAttrs: {
-        version = "23";
-        src = pkgs.fetchFromGitHub {
-          owner  = "neocturne";
-          repo = "fastd";
-          rev = "v23";
-          sha256 = "sha256-Sz6VEjKziL/w2a4VWFfMPDYvm7UZh5A/NmzP10rJ2r8=";
-        };
-      });
-    })];
-
     services.fastd-exporter = lib.mkIf hasEnabledFastdDomain {
       enable = true;
       instances = lib.mapAttrs (name: domain: config.services.fastd.${name}.statusSocket) enabledDomains;
