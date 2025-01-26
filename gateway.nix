@@ -612,12 +612,12 @@ in
 
     nixpkgs.overlays = [(self: super: {
       fastd = super.fastd.overrideAttrs (oldAttrs: {
-        version = "22-unstable-2023-08-25";
+        version = "23";
         src = pkgs.fetchFromGitHub {
           owner  = "neocturne";
           repo = "fastd";
-          rev = "2456f767edc67210797ae6a5b8a31aad83ea8296";
-          sha256 = "sha256-iSZPBZnZUgcKVRJu/+ckwR1fQJFWGOc1bfWDCd71VlE=";
+          rev = "v23";
+          sha256 = "sha256-Sz6VEjKziL/w2a4VWFfMPDYvm7UZh5A/NmzP10rJ2r8=";
         };
       });
     })];
