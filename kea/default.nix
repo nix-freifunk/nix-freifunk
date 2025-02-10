@@ -29,6 +29,7 @@
       valid-lifetime = 320;
       max-valid-lifetime = 320;
       authoritative = true;
+      decline-probation-period = 1800;
       # Logging configuration starts here. Kea uses different loggers to log various
       # activities. For details (e.g. names of loggers), see Chapter 18.
       loggers = [
