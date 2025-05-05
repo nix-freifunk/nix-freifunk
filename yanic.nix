@@ -35,6 +35,11 @@ in
       readOnly = true;
       description = "name of the started service.";
     };
+    package = mkOption {
+      type = types.package;
+      default = pkgs.yanic;
+      description = "yanic package to use";
+    };
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
@@ -175,7 +180,7 @@ in
       wantedBy = lib.mkIf (cfg.autostart) [ "multi-user.target" ];
       after = [ "network.target" ];
       serviceConfig = {
-        ExecStart = "${pkgs.yanic}/bin/yanic serve --config ${confFile}";
+        ExecStart = "${cfg.package}/bin/yanic serve --config ${confFile}";
         Restart = "always";
         RestartSec = "30s";
       };
