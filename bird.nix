@@ -69,6 +69,19 @@ in
     };
     services.bird = {
       enable = true;
+      package = pkgs.bird3.overrideAttrs (old: rec {
+        version = "3.1.2";
+        src = pkgs.fetchFromGitLab {
+          domain = "gitlab.nic.cz";
+          owner = "labs";
+          repo = "bird";
+          rev = "v{version}";
+          hash = "sha256-3Ms9yozF/Ox/kSP9rzKvkrA0VBPQb1VjtbEInl8/KZM=";
+        };
+        nativeBuildInputs = old.nativeBuildInputs ++ (with pkgs; [
+          autoreconfHook
+        ]);
+      });
       config = ''
         log syslog all;
 
