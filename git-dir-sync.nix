@@ -153,7 +153,7 @@ in
           if [ "$HEAD_PRE" != "$HEAD_POST" ]; then
             $BIN_ECHO "changes detected"
             ${concatMapStringsSep "\n  " (service: "$BIN_SYSTEMCTL is-active --quiet ${service} && $BIN_SYSTEMCTL reload ${service}") cfg.reloadServices}
-            
+
             ${cfg.extraCommandsOnChange}
           fi
 

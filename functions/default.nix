@@ -11,5 +11,5 @@ rec {
 
   enabledBatmanInterfaces = getEnabledBatmanInterfaces config.modules.freifunk.gateway.domains;
 
-  enabledBatmanInterfacesNFTstring = lib.concatStringsSep "\", \"" enabledBatmanInterfaces;  
+  enabledBatmanInterfacesNFTstring = lib.concatStringsSep "\", \"" enabledBatmanInterfaces;
 }
