@@ -845,7 +845,7 @@ in
       "${domain.batmanAdvanced.interfaceName}"
     ) enabledDomains;
 
-    networking.firewall.checkReversePath = "loose";
+    networking.firewall.checkReversePath = lib.mkDefault false;
 
     networking.nftables.tables.nixos-fw = {
       content = ''
