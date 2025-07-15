@@ -42,6 +42,20 @@ in
   };
 
   config = mkIf cfg.enable {
+
+    environment.etc."bird/bird.conf".source = lib.mkForce (let
+      cfg = config.services.bird;
+    in pkgs.writeTextFile {
+      name = "bird";
+      text = cfg.config;
+      derivationArgs.nativeBuildInputs = lib.optional cfg.checkConfig cfg.package;
+      checkPhase = lib.optionalString cfg.checkConfig ''
+        ln -s $out bird.conf
+        ${cfg.preCheckConfig}
+        bird -d -p -c bird.conf || { exit=$?; cat -n bird.conf; exit $exit; }
+      '';
+    });
+
     systemd.network = {
       netdevs = {
         "10-dummy0" = {
@@ -67,6 +81,7 @@ in
         };
       };
     };
+
     services.bird = {
       enable = true;
       config = ''
