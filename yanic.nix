@@ -1,5 +1,4 @@
 { config, lib, pkgs, ... }:
-with lib;
 
 let
 
@@ -23,25 +22,25 @@ in
 {
 
   options.services.yanic = {
-    enable = mkEnableOption "Enable yanic service";
-    autostart = mkOption {
-      type = types.bool;
+    enable = lib.mkEnableOption "Enable yanic service";
+    autostart = lib.mkOption {
+      type = lib.types.bool;
       default = false;
       description = "Start yanic service on boot";
     };
-    unitName = mkOption {
-      type = types.str;
+    unitName = lib.mkOption {
+      type = lib.types.str;
       default = "yanic";
       readOnly = true;
       description = "name of the started service.";
     };
-    package = mkOption {
-      type = types.package;
+    package = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.yanic;
       description = "yanic package to use";
     };
-    settings = mkOption {
-      type = tomlFormat.type;
+    settings = lib.mkOption {
+      type = lib.tomlFormat.type;
       default = { };
       description = "The configuration of yanic.";
       example = {
@@ -174,7 +173,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     systemd.services.${cfg.unitName} = {
       description = "Yet another node info collector";
       wantedBy = lib.mkIf (cfg.autostart) [ "multi-user.target" ];
