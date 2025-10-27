@@ -1,5 +1,4 @@
 { config, pkgs, lib, ...}:
-with lib;
 
 let
   cfgs = config.services.gitDirSync;
