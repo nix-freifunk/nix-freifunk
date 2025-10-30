@@ -18,10 +18,10 @@ buildGoModule rec {
 
   vendorHash = "sha256-r0W64dct6XWa9sIrzy0UdyoMw+kAq73Qc/QchmsYZkY=";
 
-  meta = with lib; {
+  meta = {
     description = "prometheus exporter for fastd";
     homepage = "https://github.com/freifunk-darmstadt/fastd-exporter";
-    license = licenses.mit;
+    license = lib.licenses.mit;
     mainProgram = "fastd-exporter";
   };
 }

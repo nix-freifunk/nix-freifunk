@@ -5,7 +5,6 @@
 , nodeName
 , name
 , ... }:
-with lib;
 
 let
   cfg = config.modules.freifunk.gateway;
@@ -35,18 +34,18 @@ in
 {
 
   options.modules.freifunk.gateway = {
-    enable = mkEnableOption "ffda gateway";
+    enable = lib.mkEnableOption "ffda gateway";
 
-    outInterfaces = mkOption {
-      type = types.listOf types.str;
+    outInterfaces = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
       description = ''
         Interfaces used to route through from domains.
       '';
       default = [ "enp1s0" ];
     };
 
-    vxlanInterface = mkOption {
-      type = types.str;
+    vxlanInterface = lib.mkOption {
+      type = lib.types.str;
       description = ''
         Interface used as the base vxlan interfaces.
       '';
@@ -54,52 +53,52 @@ in
     };
 
     meta = {
-      contact = mkOption {
-        type = types.str;
+      contact = lib.mkOption {
+        type = lib.types.str;
         description = "Contact Information. Announced via respondd if enabled.";
         default = "";
       };
-      latitude = mkOption {
-        type = types.str;
+      latitude = lib.mkOption {
+        type = lib.types.str;
         description = "Latitude of the server. Announced via respondd if enabled.";
         default = "";
       };
-      longitude = mkOption {
-        type = types.str;
+      longitude = lib.mkOption {
+        type = lib.types.str;
         description = "Longitude of the server. Announced via respondd if enabled.";
         default = "";
       };
     };
 
     respondd = {
-      enable = mkEnableOption "enable mesh-announce" // { default = true; };
+      enable = lib.mkEnableOption "enable mesh-announce" // { default = true; };
     };
 
     yanic = {
-      enable = mkEnableOption "enable yanic";
-      defaultSite = mkOption {
-        type = types.str;
+      enable = lib.mkEnableOption "enable yanic";
+      defaultSite = lib.mkOption {
+        type = lib.types.str;
         description = "Default site for yanic";
         default = "default";
       };
     };
 
     fastd = {
-      secretKeyIncludeFile = mkOption {
-        type = types.str;
+      secretKeyIncludeFile = lib.mkOption {
+        type = lib.types.str;
         description = ''
           Path to the fastd secret key file.
         '';
         default = "";
       };
-      peerDir = mkOption {
-        type = types.path;
+      peerDir = lib.mkOption {
+        type = lib.types.path;
         description = ''
           Path to the fastd peer directory.
         '';
       };
-      peerLimit = mkOption {
-        type = types.int;
+      peerLimit = lib.mkOption {
+        type = lib.types.int;
         description = ''
           Maximum number of peers.
         '';
@@ -108,14 +107,14 @@ in
     };
 
     vxlan = {
-      local = mkOption {
-        type = types.str;
+      local = lib.mkOption {
+        type = lib.types.str;
         description = ''
           Local IP address for the vxlan interfaces.
         '';
       };
-      interfaceNames = mkOption {
-        type = types.listOf types.str;
+      interfaceNames = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
         description = ''
           List of names for the vxlan interfaces. Can be used to add them to main interface.
 
@@ -126,15 +125,15 @@ in
         default = lib.mapAttrsToList (_: domain: domain.vxlan.interfaceName) enabledDomains;
         readOnly = true;
       };
-      port = mkOption {
-        type = types.port;
+      port = lib.mkOption {
+        type = lib.types.port;
         description = ''
           Port for the vxlan interfaces.
         '';
         default = 4789;
       };
-      remoteLocals = mkOption {
-        type = types.listOf types.str;
+      remoteLocals = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
         description = ''
           List of other local IP addresses for the vxlan interface.
         '';
@@ -142,25 +141,25 @@ in
       };
     };
 
-    dnsDomainName = mkOption {
+    dnsDomainName = lib.mkOption {
       description = "DNS domain name";
-      type = types.str;
+      type = lib.types.str;
       default = "";
     };
 
-    dnsSearchDomain = mkOption {
+    dnsSearchDomain = lib.mkOption {
       description = "DNS search domain";
-      type = types.listOf types.str;
+      type = lib.types.listOf lib.types.str;
       default = [];
     };
 
-    blockTCPPort25 = mkOption {
+    blockTCPPort25 = lib.mkOption {
       description = "Block TCP port 25";
-      type = types.bool;
+      type = lib.types.bool;
       default = false;
     };
 
-    domains = mkOption {
+    domains = lib.mkOption {
       type = with types; attrsOf  (submodule({ name, ...}:
       let
         dcfg = cfg.domains.${name};
@@ -362,15 +361,15 @@ in
                     default = builtins.elemAt (lib.splitString "/" pcfg.prefix) 1;
                     readOnly = true;
                   };
-                  addresses = mkOption {
-                    type = types.listOf types.str;
+                  addresses = lib.mkOption {
+                    type = lib.types.listOf lib.types.str;
                     description = ''
                       List of IPv4 addresses to assign.
                     '';
                     default = [];
                   };
-                  addressesCIDR = mkOption {
-                    type = types.listOf types.str;
+                  addressesCIDR = lib.mkOption {
+                    type = lib.types.listOf lib.types.str;
                     description = ''
                       IPv4 address for the current node in CIRDR notation.
                     '';
@@ -382,7 +381,7 @@ in
               default = {};
             };
             addresses = mkOption {
-              type = types.listOf types.str;
+              type = lib.types.listOf lib.types.str;
               description = ''
                 IPv4 address for the current node in CIRDR notation.
               '';
@@ -390,7 +389,7 @@ in
               readOnly = true;
             };
             addressesCIDR = mkOption {
-              type = types.listOf types.str;
+              type = lib.types.listOf lib.types.str;
               description = ''
                 IPv4 address for the current node in CIRDR notation.
               '';
@@ -398,30 +397,30 @@ in
               readOnly = true;
             };
             dhcpV4 = {
-              enable = mkEnableOption "start DHCPv4 server for this domain" // { default = true; };
-              dnsServers = mkOption {
-                type = types.listOf types.str;
+              enable = lib.mkEnableOption "start DHCPv4 server for this domain" // { default = true; };
+              dnsServers = lib.mkOption {
+                type = lib.types.listOf lib.types.str;
                 description = ''
                   List of DNS servers to send to DHCP clients.
                 '';
                 default = [];
               };
-              gateway = mkOption {
-                type = types.str;
+              gateway = lib.mkOption {
+                type = lib.types.str;
                 description = ''
                   Gateway IP to send to DHCP clients.
                 '';
                 default = builtins.elemAt dcfg.ipv4.addresses 0;
               };
-              pools = mkOption {
-                type = types.listOf types.str;
+              pools = lib.mkOption {
+                type = lib.types.listOf lib.types.str;
                 description = ''
                   List of DHCPv4 pools to use.
                 '';
                 default = [];
               };
-              captivePortalURL = mkOption {
-                type = types.str;
+              captivePortalURL = lib.mkOption {
+                type = lib.types.str;
                 description = ''
                   Value of Option 104 - Captive Portal URL (RFC8910). Defaults to announce an unrestricted network.
                 '';
@@ -430,52 +429,52 @@ in
             };
           };
           ipv6 = {
-            enable = mkEnableOption "start ipv6 for this domain" // { default = true; };
-            prefixes = mkOption {
+            enable = lib.mkEnableOption "start ipv6 for this domain" // { default = true; };
+            prefixes = lib.mkOption {
               type = with types; attrsOf  (submodule({ name, ...}: {
                 options = let
                   pcfg = dcfg.ipv6.prefixes."${name}";
                 in {
-                  prefix = mkOption {
-                    type = types.str;
+                  prefix = lib.mkOption {
+                    type = lib.types.str;
                     description = ''
                       IPv6 prefix
                     '';
                     default = "${name}";
                   };
-                  network = mkOption {
-                    type = types.str;
+                  network = lib.mkOption {
+                    type = lib.types.str;
                     description = ''
                       IPv6 Network address of this Prefix.
                     '';
                     default = builtins.elemAt (lib.splitString "/" pcfg.prefix) 0;
                     readOnly = true;
                   };
-                  length = mkOption {
-                    type = types.str;
+                  length = lib.mkOption {
+                    type = lib.types.str;
                     description = ''
                       Length of this prefix in CIDR notation.
                     '';
                     default = builtins.elemAt (lib.splitString "/" pcfg.prefix) 1;
                     readOnly = true;
                   };
-                  addresses = mkOption {
-                    type = types.listOf types.str;
+                  addresses = lib.mkOption {
+                    type = lib.types.listOf lib.types.str;
                     description = ''
                       List of IPv6 addresses to assign.
                     '';
                     default = [];
                   };
-                  addressesCIDR = mkOption {
-                    type = types.listOf types.str;
+                  addressesCIDR = lib.mkOption {
+                    type = lib.types.listOf lib.types.str;
                     description = ''
                       IPv6 address for the current node in CIRDR notation.
                     '';
                     default = map (ip: "${ip}/${pcfg.length}") pcfg.addresses;
                     readOnly = true;
                   };
-                  announce = mkOption {
-                    type = types.bool;
+                  announce = lib.mkOption {
+                    type = lib.types.bool;
                     description = ''
                       Announce this prefix via Router Advertisments.
                     '';
@@ -485,23 +484,23 @@ in
               }));
               default = {};
             };
-            dnsServers = mkOption {
-              type = types.listOf types.str;
+            dnsServers = lib.mkOption {
+              type = lib.types.listOf lib.types.str;
               description = ''
                 List of DNS servers to send via Router Advertisments
               '';
               default = [];
             };
-            addresses = mkOption {
-              type = types.listOf types.str;
+            addresses = lib.mkOption {
+              type = lib.types.listOf lib.types.str;
               description = ''
                 IPv4 address for the current node in CIRDR notation.
               '';
               default = lib.concatMap (prefix: prefix.addresses) (lib.attrValues dcfg.ipv6.prefixes);
               readOnly = true;
             };
-            addressesCIDR = mkOption {
-              type = types.listOf types.str;
+            addressesCIDR = lib.mkOption {
+              type = lib.types.listOf lib.types.str;
               description = ''
                 IPv4 address for the current node in CIRDR notation.
               '';
@@ -648,9 +647,9 @@ in
       })
       enabledDomains;
 
-    systemd.network = mkMerge (attrValues (mapAttrs (_: domain: {
+    systemd.network = lib.mkMerge (attrValues (mapAttrs (_: domain: {
       netdevs = {
-        "75-${domain.name}p-peers" = mkIf domain.fastd.enable {
+        "75-${domain.name}p-peers" = lib.mkIf domain.fastd.enable {
           netdevConfig = {
             Name = "${domain.name}p-peers";
             Kind = "bridge";
@@ -660,7 +659,7 @@ in
             STP=off
           '';
         };
-        "70-${domain.batmanAdvanced.interfaceName}" = mkIf domain.batmanAdvanced.enable {
+        "70-${domain.batmanAdvanced.interfaceName}" = lib.mkIf domain.batmanAdvanced.enable {
           netdevConfig = {
             Kind = "batadv";
             Name = "${domain.batmanAdvanced.interfaceName}";
@@ -678,7 +677,7 @@ in
             GatewayBandwidthUp=${domain.batmanAdvanced.gatewayBandwidthUp}
           '';
         };
-        "70-vxlan-${domain.name}" = mkIf domain.vxlan.enable {
+        "70-vxlan-${domain.name}" = lib.mkIf domain.vxlan.enable {
           netdevConfig = {
             Kind = "vxlan";
             Name = "${domain.vxlan.interfaceName}";
@@ -691,7 +690,7 @@ in
         };
       };
       networks = {
-        "77-vpn-${domain.name}-peer" = mkIf domain.fastd.enable {
+        "77-vpn-${domain.name}-peer" = lib.mkIf domain.fastd.enable {
           matchConfig = {
             Name = "${domain.name}p-*";
           };
@@ -705,7 +704,7 @@ in
             Isolated=True
           '';
         };
-        "75-${domain.name}p-peers" = mkIf domain.fastd.enable {
+        "75-${domain.name}p-peers" = lib.mkIf domain.fastd.enable {
           matchConfig = {
             Name = "${config.systemd.network.netdevs."75-${domain.name}p-peers".netdevConfig.Name}";
           };
@@ -718,7 +717,7 @@ in
             RequiredForOnline = false;
           };
         };
-        "70-${domain.batmanAdvanced.interfaceName}" = mkIf domain.batmanAdvanced.enable {
+        "70-${domain.batmanAdvanced.interfaceName}" = lib.mkIf domain.batmanAdvanced.enable {
           matchConfig.Name = "${domain.batmanAdvanced.interfaceName}";
           linkConfig = {
             RequiredForOnline = false;
@@ -740,7 +739,7 @@ in
             UseGateway=true
           '';
         };
-        "70-vxlan-${domain.name}" = mkIf domain.vxlan.enable {
+        "70-vxlan-${domain.name}" = lib.mkIf domain.vxlan.enable {
           matchConfig.Name = "${domain.vxlan.interfaceName}";
           linkConfig = {
             RequiredForOnline = false;
@@ -779,7 +778,7 @@ in
       }
     '';
 
-    services.kea.dhcp4.settings.subnet4 = lib.mapAttrsToList (_: domain: mkIf domain.ipv4.dhcpV4.enable {
+    services.kea.dhcp4.settings.subnet4 = lib.mapAttrsToList (_: domain: lib.mkIf domain.ipv4.dhcpV4.enable {
       id = (domain.id + 1);
       subnet = domain.ipv4.prefixes."${(builtins.elemAt (lib.attrNames domain.ipv4.prefixes) 0)}".prefix;
       interface = "${domain.batmanAdvanced.interfaceName}";
@@ -841,7 +840,7 @@ in
       );
     }) enabledDomains;
 
-    services.kea.dhcp4.settings.interfaces-config.interfaces = lib.mapAttrsToList (_: domain: mkIf domain.ipv4.dhcpV4.enable
+    services.kea.dhcp4.settings.interfaces-config.interfaces = lib.mapAttrsToList (_: domain: lib.mkIf domain.ipv4.dhcpV4.enable
       "${domain.batmanAdvanced.interfaceName}"
     ) enabledDomains;
 
@@ -929,12 +928,12 @@ in
       };
     };
 
-    systemd.services.yanic.preStart = mkIf cfg.yanic.enable ''
+    systemd.services.yanic.preStart = lib.mkIf cfg.yanic.enable ''
       ${pkgs.coreutils}/bin/mkdir -p /var/www/html/meshviewer/data/
       ${pkgs.coreutils}/bin/mkdir -p /var/lib/yanic/
     '';
 
-    services.meshAnnounce = mkIf cfg.respondd.enable {
+    services.meshAnnounce = lib.mkIf cfg.respondd.enable {
       enable = true;
       openFirewall = true;
       defaultConfig = {
