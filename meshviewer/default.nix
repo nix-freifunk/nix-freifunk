@@ -16,6 +16,8 @@ in
       default = false;
     };
 
+    package = mkPackageOption pkgs "freifunk-meshviewer" { };
+
     enableSSL = mkOption {
       type = types.bool;
       default = false;
@@ -52,7 +54,7 @@ in
     services.nginx = {
       enable = lib.mkDefault true;
       virtualHosts."${cfg.domain}" = {
-        locations."/".root = "${meshviewerPkg}";
+        locations."/".root = "${cfg.package}/share/freifunk-meshviewer/";
         locations."/".extraConfig = ''
           try_files $uri $uri/ =404;
         '';
