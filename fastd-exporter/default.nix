@@ -7,12 +7,14 @@ let
 in
 
 {
-
   options.services.fastd-exporter = {
     enable = mkOption {
       type = types.bool;
       default = false;
     };
+
+    package = mkPackageOption pkgs "fastd-exporter" { };
+
     instances = mkOption {
       type = types.attrsOf types.str;
       example = {
@@ -21,11 +23,13 @@ in
       };
       description = "A mapping of fastd instance names to the unix socket path of the fastd instance.";
     };
+
     port = mkOption {
       type = types.int;
       default = 9281;
       description = "The port the exporter should listen on.";
     };
+
     listenAddress = mkOption {
       type = types.str;
       default = "0.0.0.0";
@@ -33,6 +37,7 @@ in
         Address to listen on.
       '';
     };
+
     unitName = mkOption {
       type = types.str;
       default = "fastd-exporter";
@@ -48,17 +53,12 @@ in
   };
 
   config = mkIf cfg.enable {
-
-    nixpkgs.overlays = [(self: super: {
-      fastd-exporter = self.callPackage ./pkg.nix {};
-    })];
-
     systemd.services.${cfg.unitName} = {
       description = "fastd exporter to allow collecting fastd stats";
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
       serviceConfig = {
-        ExecStart = "${pkgs.fastd-exporter}/bin/fastd-exporter -web.listen-address ${cfg.listenAddress}:${toString cfg.port} -ip-asn-lookup.timeout ${toString cfg.ipASNlookupTimeout} ${instanceArgs}";
+        ExecStart = "${cfg.package}/bin/fastd-exporter -web.listen-address ${cfg.listenAddress}:${toString cfg.port} -ip-asn-lookup.timeout ${toString cfg.ipASNlookupTimeout} ${instanceArgs}";
         Restart = "always";
         RestartSec = "30s";
       };
