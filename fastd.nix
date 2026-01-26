@@ -31,7 +31,7 @@ let
     offload l2tp ${if value.l2tpOffload then "yes" else "no"};
     persist interface ${if value.persistInterface then "yes" else "no"};
     ${concatStringsSep "\n" (map (s: "bind " + s + ";") value.bind)}
-    ${optionalString (value.mode != "tap") "interface \"${value.interface}\";"}
+    ${optionalString (value.interface != "") "interface \"${value.interface}\";"}
     mode ${value.mode};
     ${concatMapStrings (x: ''
     include peer "${pkgs.writeText x.name ''
@@ -84,7 +84,7 @@ in
         };
         interface = mkOption {
           type = types.str;
-          default = "vpn-%n";
+          default = if cfg."${name}".mode == "tap" then "" else "vpn-%n";
         };
         peerDir = mkOption {
           type = types.str;
