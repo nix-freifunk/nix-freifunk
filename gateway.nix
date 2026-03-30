@@ -481,6 +481,24 @@ in
                     '';
                     default = true;
                   };
+                  validLifetime = mkOption {
+                    type = types.nullOr types.int;
+                    description = ''
+                      Valid lifetime for this prefix in Router Advertisments.
+                    '';
+                    default = null;
+                  };
+                  preferredLifetime = mkOption {
+                    type = types.nullOr types.int;
+                    description = ''
+                      Preferred lifetime for this prefix in Router Advertisments. Defaults to 1/6 of validLifetime if that option is set.
+                    '';
+                    default =
+                      if pcfg.validLifetime == null then
+                        null
+                      else
+                        builtins.floor (pcfg.validLifetime / 6);
+                  };
                 };
               }));
               default = {};
@@ -585,7 +603,10 @@ in
               other config no;
               solicited ra unicast yes;
 
-              ${lib.concatStringsSep "\n    " (builtins.map (ipv6: "prefix "+ipv6.prefix+" { };") (lib.filter (prefix: prefix.announce) (lib.attrValues domain.ipv6.prefixes)))}
+              ${lib.concatStringsSep "\n    " (builtins.map (ipv6: "prefix "+ipv6.prefix+" {
+                ${ if ipv6.validLifetime != null then "valid lifetime " + toString ipv6.validLifetime + ";" else "" }
+                ${ if ipv6.preferredLifetime != null then "preferred lifetime " + toString ipv6.preferredLifetime + ";" else "" }
+              };") (lib.filter (prefix: prefix.announce) (lib.attrValues domain.ipv6.prefixes)))}
 
               rdnss {
                 ${lib.concatStringsSep "\n      " (builtins.map (dnsServer: "ns "+dnsServer+";") domain.ipv6.dnsServers)}
