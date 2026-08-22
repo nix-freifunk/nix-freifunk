@@ -160,6 +160,16 @@ in
       default = false;
     };
 
+    bird = {
+      radvExportFilter = mkOption {
+        type = types.lines;
+        description = ''
+          Filter for which Routes to Export via radv for this domain.
+        '';
+        default = "";
+      };
+    };
+
     domains = mkOption {
       type = with types; attrsOf  (submodule({ name, ...}:
       let
@@ -330,6 +340,13 @@ in
           };
           bird = {
             enable = mkEnableOption "start bird for this domain" // { default = true; };
+            radvExportFilter = mkOption {
+              type = types.lines;
+              description = ''
+                Filter for which Routes to Export via radv for this domain.
+              '';
+              default = cfg.bird.radvExportFilter;
+            };
           };
           ipv4 = {
             enable = mkEnableOption "start ipv4 for this domain" // { default = true; };
@@ -589,11 +606,14 @@ in
 
         ${lib.concatStringsSep "\n  " (lib.mapAttrsToList (_: domain: ''
           protocol radv radv_${domain.name} {
-            propagate routes no;
+            propagate routes yes;
 
             ipv6 {
               table master6;
-              export all;
+              export filter {
+                ${domain.bird.radvExportFilter}
+                reject;
+              };
               import none;
             };
 
